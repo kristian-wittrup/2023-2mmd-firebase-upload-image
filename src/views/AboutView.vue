@@ -23,8 +23,8 @@
     <hr>
       <br>
       <h2>Add new post with image</h2>
-      <input type="text" v-model="addItemData.AddItemDataTitle">
-      <input type="text" v-model="addItemData.AddItemDataDescription"> 
+      <input type="text" placeholder="Title" v-model="addItemData.AddItemDataTitle">
+      <input type="text" placeholder="Description" v-model="addItemData.AddItemDataDescription"> 
      
 
       
@@ -71,6 +71,8 @@ let addItemData = reactive({
   imgURL: '',
   uploadBtnDisabled: true
 })
+
+
 
  // Add dynamic data to Firebase Firestore
  const firebaseAddSingleItem = async() => {

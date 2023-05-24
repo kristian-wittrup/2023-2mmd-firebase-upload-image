@@ -1,6 +1,45 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
 import HelloWorld from './components/HelloWorld.vue'
+
+// For logout
+import { onMounted, ref } from 'vue';
+
+import { auth } from './firebase.js'
+import { onAuthStateChanged, signOut } from "firebase/auth";
+import router from './router';
+
+
+const isLoggedIn = ref(false)
+//const router = useRouter()
+
+onMounted(() => {
+  onAuthStateChanged(auth, (user) =>{
+    if (user) {
+      isLoggedIn.value = true
+      console.log('user logged in', auth.currentUser)
+    } else {
+      isLoggedIn.value = false
+      console.log('user logged out', auth.currentUser)
+    }
+  })
+})
+
+// for logout
+const logOut = () => {
+  signOut(auth).then(() => {
+    // Sign-out successful.
+    console.log('user logged out', auth.currentUser)
+    router.push('/login')
+  }).catch((error) => {
+    console.log(error)
+    // An error happened.
+  });
+}
+
+
+
+
 </script>
 
 <template>
@@ -12,12 +51,18 @@ import HelloWorld from './components/HelloWorld.vue'
 
       <nav>
         <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
+        <RouterLink to="/about" v-if="isLoggedIn">About</RouterLink>
+        <RouterLink to="/login">Login</RouterLink>
+        <RouterLink to="/navguard">NavGuard</RouterLink>
       </nav>
+      <button @click="logOut" v-if="isLoggedIn">LogOut</button>
     </div>
   </header>
 
+  
+
   <RouterView />
+
 </template>
 
 <style scoped>
